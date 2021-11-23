@@ -41,30 +41,26 @@ pointRouter.post("/sync", async (req, res) => {
   }
 
   if (changes?.points?.created?.length > 0) {
-    const remoteCreatedData = changes.points.created.map((remoteEntry: any) => ({
-      note: remoteEntry.note,
-      weight: remoteEntry.weight,
-      watermelonId: remoteEntry.id,
-      createdAt: new Date(parseInt(remoteEntry.created_at)),
-    }));
+    const remoteCreatedData = changes.points.created.map(
+      (remoteEntry: any) => ({
+        note: remoteEntry.note,
+        weight: remoteEntry.weight,
+        watermelonId: remoteEntry.id,
+        createdAt: new Date(parseInt(remoteEntry.created_at)),
+      })
+    );
     await prisma.points.createMany({ data: remoteCreatedData });
   }
 
   if (changes?.points?.updated?.length > 0) {
-    const updateDataPromises = changes.points.updated.map(async (remoteEntry: any) => {
-      return prisma.points.update({
-        where: { id: remoteEntry.id },
-        data: {
-          accuracy: remoteEntry.accuracy,
-          altitude: remoteEntry.altitude,
-          latitude: remoteEntry.latitude,
-          longitude: remoteEntry.longitude,
-          course: remoteEntry.course,
-          heading: remoteEntry.heading,
-          speed: remoteEntry.speed,
-        },
-      });
-    });
+    const updateDataPromises = changes.points.updated.map(
+      async (remoteEntry: any) => {
+        return prisma.points.update({
+          where: { id: remoteEntry.id },
+          data: { ...remoteEntry },
+        });
+      }
+    );
     await Promise.all(updateDataPromises);
   }
 
