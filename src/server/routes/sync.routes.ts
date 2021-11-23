@@ -14,6 +14,7 @@ const getSafeLastPulledAt = (request: Request) => {
 
 syncRouter.get("/", async (req, res) => {
   const lastPulledAt = getSafeLastPulledAt(req);
+  console.log(lastPulledAt, req.query.lastPulledAt);
 
   const created = await prisma.points.findMany({
     where: { createdAt: { gt: lastPulledAt } },
@@ -22,7 +23,7 @@ syncRouter.get("/", async (req, res) => {
     where: { updatedAt: { gt: lastPulledAt } },
   });
 
-  return res.json({
+  const returnObject = {
     changes: {
       points: {
         created,
@@ -31,7 +32,11 @@ syncRouter.get("/", async (req, res) => {
       },
     },
     timestamp: Date.now(),
-  });
+  };
+
+  console.log(returnObject);
+
+  return res.json(returnObject);
 });
 
 syncRouter.post("/", async (req, res) => {
@@ -39,6 +44,9 @@ syncRouter.post("/", async (req, res) => {
   if (!changes) {
     return res.status(400).json({ error: "Wrong body" });
   }
+  const lastPulledAt = getSafeLastPulledAt(req);
+  console.log(lastPulledAt, req.query.lastPulledAt);
+  console.log("changes", changes);
 
   if (changes?.points?.created?.length > 0) {
     const remoteCreatedData = changes.points.created.map((remoteEntry: any) => ({
