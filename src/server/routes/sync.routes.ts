@@ -42,6 +42,7 @@ syncRouter.post("/", async (req, res) => {
 
   if (changes?.points?.created?.length > 0) {
     const remoteCreatedData = changes.points.created.map((remoteEntry: any) => ({
+      id: remoteEntry.id,
       accuracy: remoteEntry.accuracy,
       altitude: remoteEntry.altitude,
       latitude: remoteEntry.latitude,
