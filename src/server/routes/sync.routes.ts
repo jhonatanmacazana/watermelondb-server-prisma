@@ -2,17 +2,17 @@ import { Request, Router } from "express";
 
 import { prisma } from "#root/db/client";
 
-const pointRouter = Router();
+const syncRouter = Router();
 
 const getSafeLastPulledAt = (request: Request) => {
-  const lastPulledAt = request.body["lastPulledAt"];
+  const lastPulledAt = request.query.lastPulledAt as string;
   if (!lastPulledAt) {
-    return new Date(0).toString();
+    return new Date(0);
   }
-  return new Date(parseInt(lastPulledAt)).toString();
+  return new Date(parseInt(lastPulledAt));
 };
 
-pointRouter.get("/sync", async (req, res) => {
+syncRouter.get("/", async (req, res) => {
   const lastPulledAt = getSafeLastPulledAt(req);
 
   const created = await prisma.points.findMany({
@@ -22,7 +22,7 @@ pointRouter.get("/sync", async (req, res) => {
     where: { updatedAt: { gt: lastPulledAt } },
   });
 
-  return {
+  return res.json({
     changes: {
       points: {
         created,
@@ -31,10 +31,10 @@ pointRouter.get("/sync", async (req, res) => {
       },
     },
     timestamp: Date.now(),
-  };
+  });
 });
 
-pointRouter.post("/sync", async (req, res) => {
+syncRouter.post("/", async (req, res) => {
   const { changes } = req.body;
   if (!changes) {
     return res.status(400).json({ error: "Wrong body" });
@@ -77,4 +77,4 @@ pointRouter.post("/sync", async (req, res) => {
   return res.status(200).json({ message: "ok", error: null });
 });
 
-export { pointRouter };
+export { syncRouter };
