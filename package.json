@@ -1,8 +1,8 @@
 {
-  "name": "itelvox-portability-core",
+  "name": "watermelondb-server-prisma",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:itelvox-portability/core.git",
+  "repository": "git@github.com:jhonatanmacazana/watermelondb-server-prisma.git",
   "author": "jmacazana <jhonatan.macazana@utec.edu.pe>",
   "license": "MIT",
   "scripts": {
