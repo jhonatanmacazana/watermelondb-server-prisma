@@ -49,7 +49,7 @@ syncRouter.post("/", async (req, res) => {
       course: remoteEntry.course,
       heading: remoteEntry.heading,
       speed: remoteEntry.speed,
-      createdAt: new Date(parseInt(remoteEntry.createdAt)),
+      createdAt: new Date(parseInt(remoteEntry.created_at)),
     }));
     await prisma.points.createMany({ data: remoteCreatedData });
   }
