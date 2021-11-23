@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  server-db:
+    container_name: watermelondb-server-db
+    environment:
+      POSTGRES_USER: "myuser"
+      POSTGRES_PASSWORD: "mypass123"
+      POSTGRES_DB: "wdb"
+    image: postgres:14
+    networks:
+      - wdbs
+    ports:
+      - 5432:5432
+
+  server:
+    build: .
+    container_name: watermelondb-server
+    depends_on:
+      - core-db
+    environment:
+      DATABASE_URL: "postgres://myuser:mypass123@watermelondb-server-db:5432/wdb"
+    image: watermelondb-server
+    networks:
+      - wdbs
+    ports:
+      - 5000:5000
+
+networks:
+  wdbs:
