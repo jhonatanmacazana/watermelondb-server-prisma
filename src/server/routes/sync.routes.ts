@@ -42,10 +42,14 @@ syncRouter.post("/", async (req, res) => {
 
   if (changes?.points?.created?.length > 0) {
     const remoteCreatedData = changes.points.created.map((remoteEntry: any) => ({
-      note: remoteEntry.note,
-      weight: remoteEntry.weight,
-      watermelonId: remoteEntry.id,
-      createdAt: new Date(parseInt(remoteEntry.created_at)),
+      accuracy: remoteEntry.accuracy,
+      altitude: remoteEntry.altitude,
+      latitude: remoteEntry.latitude,
+      longitude: remoteEntry.longitude,
+      course: remoteEntry.course,
+      heading: remoteEntry.heading,
+      speed: remoteEntry.speed,
+      createdAt: new Date(parseInt(remoteEntry.createdAt)),
     }));
     await prisma.points.createMany({ data: remoteCreatedData });
   }
