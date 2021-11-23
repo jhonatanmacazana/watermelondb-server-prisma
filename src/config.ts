@@ -1,3 +1,3 @@
 import accessEnv from "./lib/accessEnv";
 
-export const PORT = parseInt(accessEnv("PORT", "9000"), 10);
+export const PORT = parseInt(accessEnv("PORT", "5000"), 10);
