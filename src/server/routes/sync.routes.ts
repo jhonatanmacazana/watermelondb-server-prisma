@@ -6,7 +6,7 @@ const syncRouter = Router();
 
 const getSafeLastPulledAt = (request: Request) => {
   const lastPulledAt = request.query.last_pulled_at as string;
-  if (!lastPulledAt) {
+  if (!lastPulledAt || lastPulledAt === "null") {
     return new Date(0);
   }
   return new Date(parseInt(lastPulledAt));
