@@ -20,7 +20,10 @@ syncRouter.get("/", async (req, res) => {
     where: { createdAt: { gt: lastPulledAt } },
   });
   const updated = await prisma.points.findMany({
-    where: { updatedAt: { gt: lastPulledAt } },
+    // where: { updatedAt: { gt: lastPulledAt } },
+    where: {
+      AND: [{ updatedAt: { gt: lastPulledAt } }, { createdAt: { lte: lastPulledAt } }],
+    },
   });
 
   const returnObject = {
