@@ -5,7 +5,7 @@ import { prisma } from "#root/db/client";
 const syncRouter = Router();
 
 const getSafeLastPulledAt = (request: Request) => {
-  const lastPulledAt = request.query.lastPulledAt as string;
+  const lastPulledAt = request.query.last_pulled_at as string;
   if (!lastPulledAt) {
     return new Date(0);
   }
@@ -14,7 +14,7 @@ const getSafeLastPulledAt = (request: Request) => {
 
 syncRouter.get("/", async (req, res) => {
   const lastPulledAt = getSafeLastPulledAt(req);
-  console.log(lastPulledAt, req.query.lastPulledAt);
+  console.log(lastPulledAt, req.query.last_pulled_at);
 
   const created = await prisma.points.findMany({
     where: { createdAt: { gt: lastPulledAt } },
@@ -45,7 +45,7 @@ syncRouter.post("/", async (req, res) => {
     return res.status(400).json({ error: "Wrong body" });
   }
   const lastPulledAt = getSafeLastPulledAt(req);
-  console.log(lastPulledAt, req.query.lastPulledAt);
+  console.log(lastPulledAt, req.query.last_pulled_at);
   console.log("changes", changes);
 
   if (changes?.points?.created?.length > 0) {
